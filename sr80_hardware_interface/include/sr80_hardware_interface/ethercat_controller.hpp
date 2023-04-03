@@ -21,6 +21,7 @@
 #include <mutex>
 #include <shared_mutex>
 #include <queue>
+#include <optional>
 #include <atomic>
 
 #include <pthread.h>
@@ -41,21 +42,30 @@ namespace sr80_hardware
     {
         
     };
-    class Data
+
+    class DataHandler
     {
         public:
 
         Data();
 
+        void writeToROS(const PdoData& data_to_write);
+
+        std::optional<PdoData> readFromROS();
+
+        void writeToHardware(const PdoData& data_to_write);
+
+        std::optional<PdoData> readFromHardware();
+
         private:
         
-        std::queue<PdoData> m_FromEC;
+        std::queue<PdoData> m_HardwareDataQueue;
 
-        std::queue<PdoData> m_ToEC;
+        std::queue<PdoData> m_RosDataQueue;
 
-        std::shared_mutex m_MutexToEC;
+        std::shared_mutex m_RosDataMutex;
 
-        std::shared_mutex m_MutexFromEC;
+        std::shared_mutex m_HardwareDataMutex;
 
     };
     
@@ -66,6 +76,8 @@ namespace sr80_hardware
             public: 
 
             Controller();
+
+            DataHandler m_DataHandler;
 
             inline void changeThreadParams(
                 int thread_policy,
