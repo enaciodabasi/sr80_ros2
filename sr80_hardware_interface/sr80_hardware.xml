@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<library path="sr80_hardware">
+    <class name="sr80_hardware/SR80Hardware"
+           type="sr80_hardware::SR80Hardware"
+           base_class_type="hardware_interface::SystemInterface">
+    <description>
+        Hardware Interface with EtherCAT for SR80.
+    </description>
+    </class>
+</library>

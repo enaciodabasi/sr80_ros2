@@ -20,7 +20,6 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/state.hpp>
-#include <class_list_macros.hpp>
 
 #include <vector>
 

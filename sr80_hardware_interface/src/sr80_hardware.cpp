@@ -42,6 +42,7 @@ namespace sr80_hardware
 
         }
 
+        return hardware_interface::CallbackReturn::SUCCESS;
     }
 
     std::vector<hardware_interface::StateInterface> SR80Hardware::export_state_interfaces()
@@ -118,23 +119,66 @@ namespace sr80_hardware
 
     hardware_interface::CallbackReturn SR80Hardware::on_configure(const rclcpp_lifecycle::State& previous_state)
     {
+        // Configure EtherCAT controller.
 
+        return hardware_interface::CallbackReturn::SUCCESS;
     }
 
     hardware_interface::CallbackReturn SR80Hardware::on_activate(const rclcpp_lifecycle::State& previous_state)
     {
+        for(std::size_t i = 0; i < m_Joints.size(); i++)
+        {
+            auto& joint = m_Joints[i];
 
+            if(std::isnan(joint.states.position))
+            {
+                joint.states.position = 0.0;
+            }
+            if(std::isnan(joint.states.velocity))
+            {
+                joint.states.velocity = 0.0;
+            }
+            if(std::isnan(joint.states.effort))
+            {
+                joint.states.effort = 0.0;
+            }
+
+            if(std::isnan(joint.commands.position))
+            {
+                joint.commands.position = 0.0;
+            }
+            if(std::isnan(joint.commands.velocity))
+            {
+                joint.commands.velocity = 0.0;
+            }
+            if(std::isnan(joint.commands.effort))
+            {
+                joint.commands.effort = 0.0;
+            }
+            if(std::isnan(joint.commands.acceleration))
+            {
+                joint.commands.acceleration = 0.0;
+            }
+            
+        }
+
+        // Activate EtherCAT master.
+
+        return hardware_interface::CallbackReturn::SUCCESS;
     }
 
     hardware_interface::CallbackReturn SR80Hardware::on_deactivate(const rclcpp_lifecycle::State& previous_state)
     {
-
+        return hardware_interface::CallbackReturn::SUCCESS;
     }
 
     hardware_interface::CallbackReturn SR80Hardware::on_shutdown(const rclcpp_lifecycle::State& previous_state)
     {
-        
+        return hardware_interface::CallbackReturn::SUCCESS;
     }
 
     
 }
+
+#include "pluginlib/class_list_macros.hpp"
+PLUGINLIB_EXPORT_CLASS(sr80_hardware::SR80Hardware, hardware_interface::SystemInterface)
