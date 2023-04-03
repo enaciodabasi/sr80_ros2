@@ -20,6 +20,23 @@ namespace sr80_hardware
 
         }
 
+        void Controller::cyclicTask()
+        {
+
+        }
+
+        bool Controller::startTask()
+        {
+            m_CyclikTaskThread = std::thread(
+                &Controller::cyclicTask,
+                this
+            );
+
+            bool isSwitchToRtSucessful =  setCyclicTaskRT();
+        
+            return isSwitchToRtSucessful;
+        }
+
         bool Controller::setCyclicTaskRT()
         {
             if(pthread_setschedparam(m_CyclikTaskThread.native_handle(), m_ThreadInfo.m_ThreadPolicy, &m_ThreadInfo.m_SchedParam))

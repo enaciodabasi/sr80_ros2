@@ -47,7 +47,7 @@ namespace sr80_hardware
     {
         public:
 
-        Data();
+        DataHandler();
 
         void writeToROS(const PdoData& data_to_write);
 
@@ -77,6 +77,15 @@ namespace sr80_hardware
 
             Controller();
 
+            void cyclicTask();
+
+            bool startTask();
+
+            inline void terminateTask()
+            {
+                m_WorkFinished = true;
+            }
+
             DataHandler m_DataHandler;
 
             inline void changeThreadParams(
@@ -99,6 +108,8 @@ namespace sr80_hardware
                 int m_ThreadPolicy = SCHED_FIFO;
                 int m_ThreadPriority = 19;
             }m_ThreadInfo;
+
+            bool m_WorkFinished = false;
 
             bool setCyclicTaskRT();
 
