@@ -8,6 +8,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(Threads REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclcpp
@@ -16,8 +18,9 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   pluginlib
 )
 
-set(ethercat_interface_INCLUDE_DIRS /home/$ENV{USER}/ethercat_interface/include/)
-
+set(ec_interface /usr/local/lib/libethercat_interface.so)
+set(ec_interface_INCLUDE_DIRS /home/$ENV{USER}/ethercat_interface/include/)
+set(ec_master /usr/local/lib/libethercat.so)
 
 foreach(DEPENDENCY IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
     find_package(${DEPENDENCY} REQUIRED)
@@ -29,11 +32,18 @@ add_library(
   src/sr80_hardware.cpp
   src/ethercat_controller.cpp
 )
+target_link_libraries(
+  sr80_hardware
+  ${ec_interface}
+  ${ec_master}
+  ${YAML_CPP_LIBRARIES}
+)
 target_include_directories(
   sr80_hardware
   PUBLIC
   include/
-  ${ethercat_interface_INCLUDE_DIRS}
+  ${ec_interface_INCLUDE_DIRS}
+  ${YAML_CPP_INCLUDE_DIRS}
 )
 ament_target_dependencies(
   sr80_hardware
